@@ -28,7 +28,6 @@ class DashboardController extends Controller
         ]);
     }
 
-
     public function orders() {
         $orders = OrderMaster::all();
 
@@ -174,7 +173,20 @@ class DashboardController extends Controller
         auth()->logout();
         return redirect('/')->with('successLogout','Successfully Logout!');
     }
-
+    
+    public function forgotPassword()
+    {
+        try {
+            request()->validate([
+                'email' => 'required|email'
+            ]);
+            return redirect('/admin/registration');
+        
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return back()->withInput()->with('errorMsg', 'Validation failed. Please check your email.');
+        }
+    
+    }
 
     public function adminSessionDestroy(Request $request)
     {
