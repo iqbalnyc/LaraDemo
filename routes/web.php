@@ -17,17 +17,22 @@ Route::post('/admin/login', [DashboardController::class, 'login']);
 // Route::get('/admin/registration', function() {
 //     return view('dashboard.registration');
 // });
+
 Route::get('/admin/registration', [RegisterController::class, 'registration']);
 Route::post('/admin/store', [RegisterController::class, 'store']);
 
 
-Route::get('/admin', [DashboardController::class, 'admin']);
+Route::get('/admin', [DashboardController::class, 'admin'])->middleware('admin');
 Route::get('/adminSessionDestroy', [DashboardController::class, 'adminSessionDestroy']);
 Route::get('/admin/orders', [DashboardController::class, 'orders']);
 Route::get('/admin/orderDetail/{id}', [DashboardController::class, 'orderDetail']);
 Route::patch('/admin/orderUpdate/{id}', [DashboardController::class, 'orderUpdate']);
 Route::get('/admin/logout', [DashboardController::class, 'logout']);
 
+Route::post('/admin/forgotPassword', [DashboardController::class, 'forgotPassword']);
+Route::get('/admin/forgotPassword', function() {
+    return view('dashboard.forgotPassword');
+});
 
 Route::get('/admin/products', [DashboardController::class, 'products']);
 Route::get('/admin/productsEdit/{id}', [DashboardController::class, 'productsEdit']);

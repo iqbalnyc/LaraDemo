@@ -18,6 +18,12 @@
         <div class="card-body">
             <h5 class="card-title text-center">User Login</h5>
             <hr class="bg-primary" />
+            @if(session('errorMsg'))
+            <div class="text-danger small text-center">
+                <p>{{ session('errorMsg') }}</p>
+            </div>
+            @endif
+    
             <form action="/admin/login" method="post">
                 @csrf
                 <!-- Error Message -->
@@ -37,7 +43,7 @@
                         <p class="text-danger small mt-2">{{ $message }}</p>
                     @enderror
                 </div>
-                <p class="text-primary"> <a href="#">Forgot Password?</a></p>
+                <p class="text-primary"> <a href="/admin/forgotPassword/{{ old('email') }}">Forgot Password?</a></p>
                 <div class="text-center">
                     <button type="submit" class="btn btn-info">Login Admin</button>
                 </div>

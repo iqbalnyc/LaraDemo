@@ -6,8 +6,11 @@ use App\Models\Category;
 use App\Models\OrderDetail;
 use App\Models\OrderMaster;
 use App\Models\Product;
+use App\Models\User;
 use Dotenv\Exception\ValidationException;
+use Illuminate\Console\View\Components\Alert;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -162,10 +165,6 @@ class DashboardController extends Controller
         session()->regenerate();  // session fixation
         return redirect('/admin');
 
-        // throw ValidationException::withMessages([
-        //     'email' => 'Credentials are invalid.'
-        // ]);
-        
     }
 
     public function logout()
@@ -174,18 +173,18 @@ class DashboardController extends Controller
         return redirect('/')->with('successLogout','Successfully Logout!');
     }
     
-    public function forgotPassword()
+    public function forgotPassword(Request $request)
     {
-        try {
-            request()->validate([
-                'email' => 'required|email'
-            ]);
-            return redirect('/admin/registration');
-        
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return back()->withInput()->with('errorMsg', 'Validation failed. Please check your email.');
+        $email = $request->input('email'); 
+        $user = User::where('email', $email)->first();
+
+        if ($user) {
+            // Email exists
+            return back()->with('success', 'Email exist');
+        } else {
+            // Email does not exist
+            return back()->with('success', 'Email does not exist');
         }
-    
     }
 
     public function adminSessionDestroy(Request $request)
