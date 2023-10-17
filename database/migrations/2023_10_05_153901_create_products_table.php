@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('productName');
             $table->integer('productCatId');
             $table->text('productDesc');
+            $table->text('productInfo');
             $table->string('productManu');
             $table->string('productPartNo');
             $table->string('productImage')->nullable();

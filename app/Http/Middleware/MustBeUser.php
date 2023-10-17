@@ -29,7 +29,8 @@ class MustBeUser
         }
         if(!$isTrue)
         {
-            abort(403);
+            return redirect("/");
+            // abort(403);
         }
 
         return $next($request);

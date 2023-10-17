@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\OrderDetail;
 use App\Models\OrderMaster;
 use App\Models\Product;
+use App\Models\Review;
 use App\Models\User;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Console\View\Components\Alert;
@@ -24,14 +25,16 @@ class DashboardController extends Controller
         $this->categories = Category::all();
     }
 
-    public function admin() {
+    public function admin()
+    {
         return view('dashboard.admin', [
             'products_count' => $this->products_count,
             'orders_count' => $this->orders_count
         ]);
     }
 
-    public function orders() {
+    public function orders()
+    {
         $orders = OrderMaster::all();
 
         return view('dashboard.orders', [
@@ -41,7 +44,8 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function products() {
+    public function products()
+    {
         $products = Product::latest();
         return view('dashboard.products', [
             'products_count' => $this->products_count,
@@ -50,7 +54,8 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function orderDetail($id) {
+    public function orderDetail($id)
+    {
         $order_detail = OrderDetail::where('orderId', '=', $id)->get();
         return view('dashboard.orderDetail', [
             'products_count' => $this->products_count,
@@ -59,7 +64,7 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function productsEdit($id) 
+    public function productsEdit($id)
     {
         $product = Product::find($id);
         return view('dashboard.productDetail', [
@@ -68,7 +73,7 @@ class DashboardController extends Controller
             'product' => $product
         ]);
     }
-    public function productsUpdate(Request $request, $id) 
+    public function productsUpdate(Request $request, $id)
     {
         $attributes = request()->validate([
             'productImage' => 'image',
@@ -139,7 +144,8 @@ class DashboardController extends Controller
         return back()->with('productAdded', 'Product has been added!');
     }
 
-    public function orderUpdate(Request $request, $id) {
+    public function orderUpdate(Request $request, $id)
+    {
 
         $order = OrderDetail::findOrFail($id);
         $orderStatus = $request->input('orderStatus');
@@ -154,28 +160,45 @@ class DashboardController extends Controller
             'email' => 'required|email',
             'password' => 'required'
         ]);
-        
-        if(! auth()->attempt($attributes))
-        {
+
+        if (!auth()->attempt($attributes)) {
             return back()
-            ->withInput()
-            ->withErrors(['email' => 'Credentials are invalid.']);
+                ->withInput()
+                ->withErrors(['email' => 'Credentials are invalid.']);
         }
 
         session()->regenerate();  // session fixation
         return redirect('/admin');
-
     }
 
     public function logout()
     {
         auth()->logout();
-        return redirect('/')->with('successLogout','Successfully Logout!');
+        return redirect('/')->with('successLogout', 'Successfully Logout!');
     }
-    
+
+    public function adminReview(Request $request)
+    {
+        $attributes = request()->validate([
+            'productId' => 'required',
+            'review' => 'required',
+            'name' => 'required',
+            'email' => 'required'
+        ]);
+
+        Review::create([
+            'productId' => $request->productId,
+            'review' => $request->review,
+            'name' => $request->name,
+            'email' => $attributes['email'],
+        ]);
+
+        return back()->with('reviewsAdded', 'Product reviews has been submitted!');
+    }
+
     public function forgotPassword(Request $request)
     {
-        $email = $request->input('email'); 
+        $email = $request->input('email');
         $user = User::where('email', $email)->first();
 
         if ($user) {
@@ -190,10 +213,9 @@ class DashboardController extends Controller
     public function adminSessionDestroy(Request $request)
     {
         auth()->logout();
-        return redirect('/')->with('successLogout','Successfully Logout!');
+        return redirect('/')->with('successLogout', 'Successfully Logout!');
 
         // $request->session()->flush();
         // return back()->with('success', 'You are successfully logout');
     }
-    
 }

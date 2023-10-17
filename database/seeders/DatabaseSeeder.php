@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Contact;
 use App\Models\Product;
+use App\Models\Review;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -23,9 +24,11 @@ class DatabaseSeeder extends Seeder
         Category::truncate();
         Product::truncate();
         Contact::truncate();
-
+        Review::truncate();
+        
         User::factory()->create([
-            'name' => 'habiba'
+            'name' => 'habiba',
+            'user_type' => 'Support'
         ]);
 
         $category = Category::factory()->create([

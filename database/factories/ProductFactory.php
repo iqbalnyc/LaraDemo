@@ -21,6 +21,7 @@ class ProductFactory extends Factory
             'productName' => $this->faker->sentence,
             'productCatId' => Category::factory(),
             'productDesc' => $this->faker->sentence,
+            'productInfo' => $this->faker->sentence,
             'productManu' => $this->faker->sentence,
             'productPartNo' => $this->faker->sentence,
             'productStatus' => $this->faker->sentence,

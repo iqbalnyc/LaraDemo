@@ -13,7 +13,12 @@
         <div class="col-lg-2 col-md-4 col-sm-6 pb-1">
             <div class="product-item bg-light mb-4">
                 <div class="product-img position-relative overflow-hidden">
-                    <img class="img-fluid w-100" src="{{ asset('storage/' .  $item->productImage) }}" alt="">
+                    @if (Storage::exists($item->productImage)) 
+                    <img width="280" height="250"  src="{{ asset('storage/' .  $item->productImage) }}" alt="Image">
+                    @else
+                    <img width="280" height="250"  src="{{ asset('storage/thumbnails/' .  'notfound.png') }}" alt="Image">
+                    @endif
+                    <!-- <img width="280" height="250" src="{{ asset('storage/' .  $item->productImage) }}" alt=""> -->
                 </div>
                 <div class="text-center py-4">
                     <a class="h6 text-decoration-none" href="/detail/{{ $item->id }}">{{ $item->productName }}</a>

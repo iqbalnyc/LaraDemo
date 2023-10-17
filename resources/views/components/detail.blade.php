@@ -49,8 +49,12 @@
         <div class="col-lg-5 mb-30">
             <div id="product-carousel" data-ride="carousel">
                 <div class="carousel-inner bg-light">
-                    <div class="carousel-item active">
-                        <img class="w-100 h-100 rounded mx-auto d-block" src="{{ asset('storage/' .  $product->productImage) }}" alt="Image">
+                    <div class="position-relative overflow-hidden">
+                        @if (Storage::exists($product->productImage)) 
+                        <img class="rounded mx-auto d-block" width="400" height="420" src="{{ asset('storage/' .  $product->productImage) }}" alt="Image">
+                        @else
+                        <img class="rounded mx-auto d-block" width="400" height="420" src="{{ asset('storage/thumbnails/' .  'notfound.png') }}" alt="Image">
+                        @endif
                     </div>
                 </div>
             </div>
@@ -74,7 +78,6 @@
                     <small class="pt-1">{{ $product->productPrice }}</small>
                 </div>
                 <h3 class="font-weight-semi-bold mb-4">${{ $product->productPrice }}</h3>
-                <p class="mb-0 bg-light">Description: {{ $product->productDesc }}</p>
                 <p class="mb-0">Manufacturer: {{ $product->productManu }}</p>
                 <p class="mb-0">Part No: {{ $product->productPartNo }}</p>
                 <p class="mb-4">Available: {{ $product->productStatus }}</p>
@@ -135,57 +138,26 @@
                 <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">Reviews (0)</a>
             </div>
             <div class="tab-content">
+                <!-- Product Description -->
                 <div class="tab-pane fade show active" id="tab-pane-1">
                     <h4 class="mb-3">Product Description</h4>
-                    <p>Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea invidunt.</p>
-                    <p>Dolore magna est eirmod sanctus dolor, amet diam et eirmod et ipsum. Amet dolore tempor consetetur sed lorem dolor sit lorem tempor. Gubergren amet amet labore sadipscing clita clita diam clita. Sea amet et sed ipsum lorem elitr et, amet et labore voluptua sit rebum. Ea erat sed et diam takimata sed justo. Magna takimata justo et amet magna et.</p>
+                    <p>{{ $product->productDesc }}</p>
                 </div>
+                <!-- Product Information -->
                 <div class="tab-pane fade" id="tab-pane-2">
                     <h4 class="mb-3">Additional Information</h4>
-                    <p>Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea invidunt.</p>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item px-0">
-                                    Sit erat duo lorem duo ea consetetur, et eirmod takimata.
-                                </li>
-                                <li class="list-group-item px-0">
-                                    Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
-                                </li>
-                                <li class="list-group-item px-0">
-                                    Duo amet accusam eirmod nonumy stet et et stet eirmod.
-                                </li>
-                                <li class="list-group-item px-0">
-                                    Takimata ea clita labore amet ipsum erat justo voluptua. Nonumy.
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item px-0">
-                                    Sit erat duo lorem duo ea consetetur, et eirmod takimata.
-                                </li>
-                                <li class="list-group-item px-0">
-                                    Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
-                                </li>
-                                <li class="list-group-item px-0">
-                                    Duo amet accusam eirmod nonumy stet et et stet eirmod.
-                                </li>
-                                <li class="list-group-item px-0">
-                                    Takimata ea clita labore amet ipsum erat justo voluptua. Nonumy.
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                    <p>{{ $product->productInfo }}</p>
                 </div>
+                <!-- Reveiw -->
                 <div class="tab-pane fade" id="tab-pane-3">
                     <div class="row">
                         <div class="col-md-6">
-                            <h4 class="mb-4">1 review for "Product Name"</h4>
+                            <h4 class="mb-4">{{ $reviews->count() }} review for {{ $product->productName }}</h4>
+                            @foreach($reviews as $review)
                             <div class="media mb-4">
-                                <img src="assets/img/user.jpg" alt="Image" class="assets/img-fluid mr-3 mt-1" style="width: 45px;">
+                                <img class="assets/img-fluid mr-3 mt-1" style="width: 45px;"src="{{ asset('storage/thumbnails/' .  'user.jpg') }}" alt="Image">
                                 <div class="media-body">
-                                    <h6>John Doe<small> - <i>01 Jan 2045</i></small></h6>
+                                    <h6>{{ $review['name'] }}<small> - <i>{{ $review['created_at'] }}</i></small></h6>
                                     <div class="text-primary mb-2">
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
@@ -193,10 +165,15 @@
                                         <i class="fas fa-star-half-alt"></i>
                                         <i class="far fa-star"></i>
                                     </div>
-                                    <p>Diam amet duo labore stet elitr ea clita ipsum, tempor labore accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.</p>
+                                    <p>
+                                    {{ $review['review'] }}
+                                    </p>
                                 </div>
+                               
                             </div>
+                            @endforeach
                         </div>
+                        <!-- Review Form -->
                         <div class="col-md-6">
                             <h4 class="mb-4">Leave a review</h4>
                             <small>Your email address will not be published. Required fields are marked *</small>
@@ -210,26 +187,30 @@
                                     <i class="far fa-star"></i>
                                 </div>
                             </div>
-                            <form>
+                            <form action="/admin/review" method="post">
+                                @csrf
+                                <input type="hidden" class="form-control" name="productId" value="{{ $product->id }}">
                                 <div class="form-group">
-                                    <label for="message">Your Review *</label>
-                                    <textarea id="message" cols="30" rows="5" class="form-control"></textarea>
+                                    <label for="review">Your Review *</label>
+                                    <textarea name="review" id="review" cols="30" rows="5" class="form-control"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label for="name">Your Name *</label>
-                                    <input type="text" class="form-control" id="name">
+                                    <input type="text" class="form-control" name="name" id="name">
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Your Email *</label>
-                                    <input type="email" class="form-control" id="email">
+                                    <input type="email" class="form-control" name="email" id="email">
                                 </div>
                                 <div class="form-group mb-0">
                                     <input type="submit" value="Leave Your Review" class="btn btn-primary px-3">
                                 </div>
                             </form>
                         </div>
+                        <!-- Review Form -->
                     </div>
                 </div>
+                <!-- Review -->
             </div>
         </div>
     </div>

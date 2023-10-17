@@ -8,6 +8,7 @@ use App\Models\Contactus;
 use App\Models\OrderDetail;
 use App\Models\OrderMaster;
 use App\Models\Product;
+use App\Models\Review;
 use Database\Factories\ContactFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -40,6 +41,7 @@ class ProductController extends Controller
     public function detail(Product $product)
     {
         $categories = Category::all();
+        $reviews = Review::where('productId', '=', $product->id)->get();
 
         if (session()->has('cart') && session('cart') !== null) {
             $countCart = count(session('cart'));
@@ -49,7 +51,8 @@ class ProductController extends Controller
         return view('components.detail', [
             'product' => $product,
             'category' => $categories,
-            'countCart' => $countCart
+            'countCart' => $countCart,
+            'reviews' => $reviews
         ]);
     }
 
